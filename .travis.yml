@@ -3,7 +3,6 @@ os:
 
 language: c
 
-
 before_script:
 - sudo apt-get update
 - sudo apt-get install qemu
