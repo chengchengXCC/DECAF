@@ -21,8 +21,12 @@ env:
   - Cmd="./configure --enable-vmi --enable-tcg-taint --enable-tcg-ir-log"
 
 
-script:
- - $Cmd && make && make distclean && reset
+script: pwd
+# - $Cmd && make && make distclean && reset
+#  - ./configure --enable-vmi --disable-docs
+#  - make
+#  - cd i386-softmmu #to do here
+ 
 
 ##need to run a small image, and plugin test
 
