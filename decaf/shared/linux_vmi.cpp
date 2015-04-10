@@ -745,8 +745,8 @@ next:
 // process * find_new_process(CPUState *env, uint32_t cr3) __attribute__((optimize("O0")));
 // scan the task list and find new process
 static
-process * find_new_process(CPUState *env, uint32_t cr3) {
-	uint32_t task_pid = 0, ts_parent_pid = 0, proc_cr3 = -1;
+process * find_new_process(CPUState *env, /*uint32_t*/target_ulong cr3) {
+	/*uint32_t*/target_ulong task_pid = 0, ts_parent_pid = 0, proc_cr3 = -1;
 	const int MAX_LOOP_COUNT = 1024; // maximum loop count when trying to find a new process (will there be any?)
 	process *right_proc = NULL;
 
