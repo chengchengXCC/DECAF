@@ -85,7 +85,7 @@ BYTE *recon_file_data_raw = 0;
 /* Timer to check for proc exits */
 static QEMUTimer *recon_timer = NULL;
 
-unordered_map < uint32_t, pair<module *, uint32_t> > phys_module_map;
+unordered_map < /*uint32_t*/target_ulong, pair<module *,/* uint32_t*/target_ulong> > phys_module_map;
 
 
 
@@ -106,14 +106,14 @@ static bool should_extract_symbol(const char *module_name)
 
 
 
-static inline int is_page_resolved(process *proc, uint32_t page_num)
+static inline int is_page_resolved(process *proc, /*uint32_t*/target_ulong page_num)
 {
 	return (proc->resolved_pages.find(page_num>>12) != proc->resolved_pages.end());
 }
 
-static inline int unresolved_attempt(process *proc, uint32_t addr)
+static inline int unresolved_attempt(process *proc, /*uint32_t*/target_ulong addr)
 {
-	unordered_map <uint32_t, int>::iterator iter = proc->unresolved_pages.find(addr>>12);
+	unordered_map </*uint32_t*/target_ulong, int>::iterator iter = proc->unresolved_pages.find(addr>>12);
 	if(iter == proc->unresolved_pages.end()) {
 		proc->unresolved_pages[addr>>12] = 1;
 		return 1;
@@ -124,8 +124,8 @@ static inline int unresolved_attempt(process *proc, uint32_t addr)
 }
 
 
-static process * find_new_process(CPUState *env, uint32_t cr3) {
-	uint32_t kdvb, psAPH, curr_proc, next_proc;
+static process * find_new_process(CPUState *env,/* uint32_t*/target_ulong cr3) {
+	/*uint32_t*/target_ulong  kdvb, psAPH, curr_proc, next_proc;
 	process *pe;
 
 	if (gkpcr == 0)
@@ -136,8 +136,8 @@ static process * find_new_process(CPUState *env, uint32_t cr3) {
 	DECAF_read_mem(env, psAPH, 4, &curr_proc);
 
 	while (curr_proc != 0 && curr_proc != psAPH) {
-		uint32_t pid, proc_cr3;
-		uint32_t curr_proc_base = curr_proc
+		/*uint32_t*/target_ulong pid, proc_cr3;
+		/*uint32_t*/target_ulong curr_proc_base = curr_proc
 				- handle_funds[GuestOS_index].offset->PSAPL_OFFSET;
 
 		DECAF_read_mem(env,
@@ -470,7 +470,7 @@ static void extract_PE_info(uint32_t cr3, uint32_t base, module *mod, CPUState *
 
 static void retrieve_missing_symbols(process *proc, CPUState *_env)
 {
-	unordered_map < uint32_t,module * >::iterator iter = proc->module_list.begin();
+	unordered_map < /*uint32_t*/target_ulong,module * >::iterator iter = proc->module_list.begin();
 
 	for(; iter!=proc->module_list.end(); iter++) {
 		module *cur_mod = iter->second;
@@ -686,7 +686,7 @@ void check_procexit(void *)
 	uint32_t end_time[2];
 	vector<target_ulong> pid_list;
 
-	unordered_map < uint32_t, process * >::iterator iter = process_map.begin();
+	unordered_map </* uint32_t*/target_ulong, process * >::iterator iter = process_map.begin();
 	for (; iter!=process_map.end(); iter++) {
 		process *proc = iter->second;
 		if (proc->parent_pid == 0)

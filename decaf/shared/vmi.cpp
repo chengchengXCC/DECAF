@@ -46,9 +46,9 @@ using namespace std;
 using namespace std::tr1;
 
 //map cr3 to process_info_t
-unordered_map < uint32_t, process * >process_map;
+unordered_map </* uint32_t*/target_ulong, process * >process_map;
 //map pid to process_info_t
-unordered_map < uint32_t, process * >process_pid_map;
+unordered_map < /*uint32_t*/target_ulong, process * >process_pid_map;
 // module list
 unordered_map < string, module * >module_name;
 
@@ -114,7 +114,7 @@ _skip_probe:
 
 process* VMI_find_process_by_name(const char *name)
 {
-	unordered_map < uint32_t, process * >::iterator iter;
+	unordered_map </* uint32_t*/target_ulong, process * >::iterator iter;
 	for (iter = process_map.begin(); iter != process_map.end(); iter++) {
 		process * proc = iter->second;
 		if (strcmp((const char *)name,proc->name) == 0) {
@@ -124,9 +124,9 @@ process* VMI_find_process_by_name(const char *name)
 	return 0;
 }
 
-process * VMI_find_process_by_pgd(uint32_t pgd)
+process * VMI_find_process_by_pgd(/*uint32_t*/target_ulong pgd)
 {
-    unordered_map < uint32_t, process * >::iterator iter =
+    unordered_map < /*uint32_t*/target_ulong, process * >::iterator iter =
 	process_map.find(pgd);
 
     if (iter != process_map.end())
@@ -136,9 +136,9 @@ process * VMI_find_process_by_pgd(uint32_t pgd)
 }
 
 
-process *VMI_find_process_by_pid(uint32_t pid)
+process *VMI_find_process_by_pid(/*uint32_t*/target_ulong pid)
 {
-	unordered_map < uint32_t, process * >::iterator iter =
+	unordered_map < /*uint32_t*/target_ulong, process * >::iterator iter =
 		process_pid_map.find(pid);
 
 	if (iter == process_pid_map.end())
@@ -159,9 +159,9 @@ module* VMI_find_module_by_key(const char *key)
 	return NULL;
 }
 
-module * VMI_find_module_by_base(target_ulong pgd, uint32_t base)
+module * VMI_find_module_by_base(target_ulong pgd, /*uint32_t*/target_ulong base)
 {
-	unordered_map<uint32_t, process *>::iterator iter = process_map.find(pgd);
+	unordered_map</*uint32_t*/target_ulong, process *>::iterator iter = process_map.find(pgd);
 	process *proc;
 
 	if (iter == process_pid_map.end()) //pid not found
@@ -169,7 +169,7 @@ module * VMI_find_module_by_base(target_ulong pgd, uint32_t base)
 
 	proc = iter->second;
 
-	unordered_map<uint32_t, module *>::iterator iter_m = proc->module_list.find(base);
+	unordered_map</*uint32_t*/target_ulong, module *>::iterator iter_m = proc->module_list.find(base);
 	if(iter_m == proc->module_list.end())
 		return NULL;
 
@@ -182,14 +182,14 @@ module * VMI_find_module_by_pc(target_ulong pc, target_ulong pgd, target_ulong *
 	if (pc >= VMI_guest_kernel_base) {
 		proc = process_pid_map[0];
 	} else {
-		unordered_map < uint32_t, process * >::iterator iter_p = process_map.find(pgd);
+		unordered_map </* uint32_t*/target_ulong, process * >::iterator iter_p = process_map.find(pgd);
 		if (iter_p == process_map.end())
 			return NULL;
 
 		proc = iter_p->second;
 	}
 
-	unordered_map< uint32_t, module * >::iterator iter;
+	unordered_map</* uint32_t*/target_ulong, module * >::iterator iter;
 	for (iter = proc->module_list.begin(); iter != proc->module_list.end(); iter++) {
 		module *mod = iter->second;
 		if (iter->first <= pc && mod->size + iter->first > pc) {
@@ -203,13 +203,13 @@ module * VMI_find_module_by_pc(target_ulong pc, target_ulong pgd, target_ulong *
 
 module * VMI_find_module_by_name(const char *name, target_ulong pgd, target_ulong *base)
 {
-	unordered_map < uint32_t, process * >::iterator iter_p = process_map.find(pgd);
+	unordered_map </* uint32_t*/target_ulong, process * >::iterator iter_p = process_map.find(pgd);
 	if (iter_p == process_map.end())
 		return NULL;
 
 	process *proc = iter_p->second;
 
-	unordered_map< uint32_t, module * >::iterator iter;
+	unordered_map< /*uint32_t*/target_ulong, module * >::iterator iter;
 	for (iter = proc->module_list.begin(); iter != proc->module_list.end(); iter++) {
 		module *mod = iter->second;
 		if (strcasecmp(mod->name, name) == 0) {
@@ -269,7 +269,7 @@ int VMI_create_process(process *proc)
 	params.cp.cr3 = proc->cr3;
 	params.cp.pid = proc->pid;
 	params.cp.name = proc->name;
-    unordered_map < uint32_t, process * >::iterator iter =
+    unordered_map </* uint32_t*/target_ulong, process * >::iterator iter =
     	process_pid_map.find(proc->pid);
     if (iter != process_pid_map.end()){
     	// Found an existing process with the same pid
@@ -278,7 +278,7 @@ int VMI_create_process(process *proc)
     	VMI_remove_process(proc->pid);
     }
 
-    unordered_map < uint32_t, process * >::iterator iter2 =
+    unordered_map </* uint32_t*/target_ulong, process * >::iterator iter2 =
         	process_map.find(proc->cr3);
     if (iter2 != process_map.end()) {
     	// Found an existing process with the same CR3
@@ -304,11 +304,11 @@ int VMI_create_process(process *proc)
 }
 
 
-int VMI_remove_process(uint32_t pid)
+int VMI_remove_process(/*uint32_t*/target_ulong pid)
 {
 	VMI_Callback_Params params;
 	process *proc;
-    unordered_map < uint32_t, process * >::iterator iter =
+    unordered_map </* uint32_t*/target_ulong, process * >::iterator iter =
     	process_pid_map.find(pid);
 
     if(iter == process_pid_map.end())
@@ -331,7 +331,7 @@ int VMI_remove_process(uint32_t pid)
 
 
 
-int VMI_insert_module(uint32_t pid, uint32_t base, module *mod)
+int VMI_insert_module(/*uint32_t*/target_ulong pid, /*uint32_t*/target_ulong base, module *mod)
 {
 	VMI_Callback_Params params;
 	params.lm.pid = pid;
@@ -339,7 +339,7 @@ int VMI_insert_module(uint32_t pid, uint32_t base, module *mod)
 	params.lm.name = mod->name;
 	params.lm.size = mod->size;
 	params.lm.full_name = mod->fullname;
-	unordered_map<uint32_t, process *>::iterator iter = process_pid_map.find(
+	unordered_map</*uint32_t*/target_ulong, process *>::iterator iter = process_pid_map.find(
 			pid);
 	process *proc;
 
@@ -351,7 +351,7 @@ int VMI_insert_module(uint32_t pid, uint32_t base, module *mod)
 
 	//Now the pages within the module's memory region are all resolved
 	//We also need to removed the previous modules if they happen to sit on the same region
-	for (uint32_t vaddr = base; vaddr < base + mod->size; vaddr += 4096) {
+	for (/*uint32_t*/target_ulong vaddr = base; vaddr < base + mod->size; vaddr += 4096) {
 		proc->resolved_pages.insert(vaddr >> 12);
 		proc->unresolved_pages.erase(vaddr >> 12);
 		//TODO: UnloadModule callback
@@ -368,12 +368,12 @@ int VMI_insert_module(uint32_t pid, uint32_t base, module *mod)
 	return 0;
 }
 
-int VMI_remove_module(uint32_t pid, uint32_t base)
+int VMI_remove_module(/*uint32_t*/target_ulong pid,/* uint32_t*/target_ulong base)
 {
 	VMI_Callback_Params params;
 	params.rm.pid = pid;
 	params.rm.base = base;
-	unordered_map<uint32_t, process *>::iterator iter = process_pid_map.find(
+	unordered_map</*uint32_t*/target_ulong, process *>::iterator iter = process_pid_map.find(
 			pid);
 	process *proc;
 
@@ -383,7 +383,7 @@ int VMI_remove_module(uint32_t pid, uint32_t base)
 	proc = iter->second;
 	params.rm.cr3 = proc->cr3;
 
-	unordered_map<uint32_t, module *>::iterator m_iter = proc->module_list.find(base);
+	unordered_map</*uint32_t*/target_ulong, module *>::iterator m_iter = proc->module_list.find(base);
 	if(m_iter == proc->module_list.end())
 		return -1;
 
@@ -393,7 +393,7 @@ int VMI_remove_module(uint32_t pid, uint32_t base)
 	params.rm.size = mod->size;
 	params.rm.full_name = mod->fullname;
 
-	for (uint32_t vaddr = base; vaddr < base + mod->size; vaddr += 4096) {
+	for (/*uint32_t*/target_ulong vaddr = base; vaddr < base + mod->size; vaddr += 4096) {
 		proc->resolved_pages.erase(vaddr >> 12);
 		proc->unresolved_pages.erase(vaddr >> 12);
 	}
@@ -403,7 +403,7 @@ int VMI_remove_module(uint32_t pid, uint32_t base)
 	return 0;
 }
 
-int VMI_update_name(uint32_t pid, char *name)
+int VMI_update_name(/*uint32_t*/target_ulong pid, char *name)
 {
 	monitor_printf(default_mon,"updating name : not implemented\n");
 }

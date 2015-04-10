@@ -95,12 +95,12 @@ done:
 int is_fullname_retrieved(process *proc)
 {
   module * m = NULL;
-  unordered_map<uint32_t, module *>::iterator iter;
+  unordered_map</*uint32_t*/target_ulong, module *>::iterator iter;
   if(proc == NULL)
     return 1;
 
 
-    uint32_t index = 0;
+    uint32_t /*target_ulong*/ index = 0;
     for (iter = proc->module_list.begin(); iter != proc->module_list.end();
         iter++) {
        m = iter->second;
@@ -125,12 +125,12 @@ int update_kernel_modules(CPUState * _env, gva_t vaddr)
 
 }
 
-int procmod_insert_modinfo(uint32_t pid, uint32_t cr3, const char *name,
-			   uint32_t base, uint32_t size, const char *full_name)
+int procmod_insert_modinfo(/*uint32_t*/target_ulong pid, /*uint32_t*/target_ulong cr3, const char *name,
+			  /* uint32_t*/target_ulong base, uint32_t size, const char *full_name)
 {
   assert(strlen(name) < VMI_MAX_MODULE_PROCESS_NAME_LEN);
   assert(strlen(full_name) < VMI_MAX_MODULE_FULL_NAME_LEN);
-  unordered_map<uint32_t, process *>::iterator iter = process_pid_map.find(
+  unordered_map</*uint32_t*/target_ulong, process *>::iterator iter = process_pid_map.find(
       pid);
   process *proc;
 
@@ -163,7 +163,7 @@ int procmod_insert_modinfo(uint32_t pid, uint32_t cr3, const char *name,
   return 0;
 }
 
-int procmod_remove_modinfo(uint32_t pid, uint32_t base)
+int procmod_remove_modinfo(/*uint32_t*/target_ulong pid, /*uint32_t*/target_ulong base)
 {
    
    VMI_remove_module(pid, base);
@@ -171,8 +171,8 @@ int procmod_remove_modinfo(uint32_t pid, uint32_t base)
 }
 
 
-int procmod_createproc(uint32_t pid, uint32_t parent_pid,
-           uint32_t cr3, const char *name)
+int procmod_createproc(/*uint32_t*/target_ulong pid, /*uint32_t*/target_ulong parent_pid,
+           /*uint32_t*/target_ulong cr3, const char *name)
 {
 
 
@@ -210,7 +210,7 @@ int procmod_createproc(uint32_t pid, uint32_t parent_pid,
   return 0;
 }
 
-int procmod_removeproc(uint32_t pid)
+int procmod_removeproc(/*uint32_t*/target_ulong pid)
 {
 	VMI_remove_process(pid);
 	return 0;
