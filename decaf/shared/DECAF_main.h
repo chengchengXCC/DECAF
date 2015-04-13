@@ -69,8 +69,8 @@ typedef struct _plugin_interface {
   /// 0 means system-wide monitoring, including all processes and kernel.
   union
   {
-    uint32_t monitored_cr3;
-    uint32_t monitored_pgd; //alias
+    /*uint32_t*/target_ulong monitored_cr3;
+    /*uint32_t*/target_ulong monitored_pgd; //alias
   };
 } plugin_interface_t;
 
@@ -158,7 +158,7 @@ extern void DECAF_keystroke_place(int keycode);
 /// This is a boolean flag that indicates if the current execution needs to be monitored
 /// and analyzed by the plugin. The default value is 1, which means that the plugin wants
 /// to monitor all execution (including the OS kernel and all running applications).
-/// Very often, the plugin is only interested in a single user-level process.
+/// Very often, the plugin ifs only interested in a single user-level process.
 /// In this case, the plugin is responsible to set this flag to 1 when the execution is within
 /// the specified process and to 0 when it is not.
 extern int should_monitor;
@@ -203,7 +203,7 @@ void DECAF_flushTranslationPage_env(CPUState* env, gva_t addr);
 //These are DECAF wrappers that does flushing for all VCPUs
 
 //Iterates through all virtual cpus and flushes the blocks
-static inline void DECAF_flushTranslationBlock(uint32_t addr)
+static inline void DECAF_flushTranslationBlock(/*uint32_t*/target_ulong addr)
 {
   CPUState* env;
   DECAF_stop_vm();
@@ -215,7 +215,7 @@ static inline void DECAF_flushTranslationBlock(uint32_t addr)
 }
 
 //Iterates through all virtual cpus and flushes the pages
-static inline void DECAF_flushTranslationPage(uint32_t addr)
+static inline void DECAF_flushTranslationPage(/*uint32_t*/target_ulong addr)
 {
   CPUState* env;
   DECAF_stop_vm();
