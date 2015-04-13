@@ -95,14 +95,14 @@ static QEMUTimer *recon_timer = NULL;
 
 
 // query if one vm page is resolved
-static inline bool is_vm_page_resolved(process *proc, uint32_t addr)
+static inline bool is_vm_page_resolved(process *proc, /*uint32_t*/target_ulong addr)
 {
 	return (proc->resolved_pages.find(addr >> 12) != proc->resolved_pages.end());
 }
 
-static inline int unresolved_attempt(process *proc, uint32_t addr)
+static inline int unresolved_attempt(process *proc,/* uint32_t*/target_ulong addr)
 {
-	unordered_map <uint32_t, int>::iterator iter = proc->unresolved_pages.find(addr>>12);
+	unordered_map </*uint32_t*/target_ulong, int>::iterator iter = proc->unresolved_pages.find(addr>>12);
 	if(iter == proc->unresolved_pages.end()) {
 		proc->unresolved_pages[addr>>12] = 1;
 		return 1;
@@ -113,7 +113,7 @@ static inline int unresolved_attempt(process *proc, uint32_t addr)
 }
 
 
-void extract_symbols_info(CPUState *env, uint32_t cr3, target_ulong start_addr, module * mod)
+void extract_symbols_info(CPUState *env,/* uint32_t*/target_ulong cr3, target_ulong start_addr, module * mod)
 {
 	if ( mod->symbols_extracted = read_elf_info(env, cr3, mod->name, start_addr, mod->size) ) {
 		monitor_printf(default_mon, "mod %s (start_addr = 0x%08x, end_addr = 0x%08x) is extracted \n", mod->name, start_addr, (start_addr + mod->size));
@@ -132,7 +132,7 @@ static void get_new_modules_x86(CPUState* env, process * proc)
 	target_ulong mod_vm_start, mod_vm_end;
 	module* mod = NULL;
 	string _name;
-	set<uint32_t> module_bases;
+	set</*uint32_t*/target_ulong> module_bases;
 	bool finished_traversal = false;
 	int mod_stage = 0;
 	bool three_sections_found = false;
@@ -363,14 +363,14 @@ next:
 	}
 
 	if (finished_traversal) {
-		unordered_map<uint32_t, module *>::iterator iter = proc->module_list.begin();
-		set<uint32_t> bases_to_remove;
+		unordered_map</*uint32_t*/target_ulong, module *>::iterator iter = proc->module_list.begin();
+		set</*uint32_t*/target_ulong> bases_to_remove;
 		for(; iter!=proc->module_list.end(); iter++) {
 			if (module_bases.find(iter->first) == module_bases.end())
 				bases_to_remove.insert(iter->first);
 		}
 
-		set<uint32_t>::iterator iter2;
+		set</*uint32_t*/target_ulong>::iterator iter2;
 		for (iter2=bases_to_remove.begin(); iter2!=bases_to_remove.end(); iter2++) {
 			if (proc->pid == 1)
 				monitor_printf(default_mon, "removed module %08x\n", *iter2);
@@ -394,7 +394,7 @@ static void get_new_modules_arm(CPUState* env, process * proc)
 	target_ulong mod_vm_start, mod_vm_end;
 	module* mod = NULL;
 	string _name;
-	set<uint32_t> module_bases;
+	set</*uint32_t*/target_ulong> module_bases;
 	bool finished_traversal = false;
 	int mod_stage = 0;
 	bool two_sections_found = false;
@@ -528,14 +528,14 @@ next:
 	}
 
 	if (finished_traversal) {
-		unordered_map<uint32_t, module *>::iterator iter = proc->module_list.begin();
-		set<uint32_t> bases_to_remove;
+		unordered_map</*uint32_t*/target_ulong, module *>::iterator iter = proc->module_list.begin();
+		set</*uint32_t*/target_ulong> bases_to_remove;
 		for(; iter!=proc->module_list.end(); iter++) {
 			if (module_bases.find(iter->first) == module_bases.end())
 				bases_to_remove.insert(iter->first);
 		}
 
-		set<uint32_t>::iterator iter2;
+		set</*uint32_t*/target_ulong>::iterator iter2;
 		for (iter2=bases_to_remove.begin(); iter2!=bases_to_remove.end(); iter2++) {
 			if (proc->pid == 1)
 				monitor_printf(default_mon, "removed module %08x\n", *iter2);
@@ -560,7 +560,7 @@ void get_new_modules_mips(CPUState* env, process * proc)
 	target_ulong mod_vm_start, mod_vm_end;
 	module* mod = NULL;
 	string _name;
-	set<uint32_t> module_bases;
+	set</*uint32_t*/target_ulong> module_bases;
 	bool finished_traversal = false;
 	int mod_stage = 0;
 	bool three_sections_found = false;
@@ -722,14 +722,14 @@ next:
 	}
 
 	if (finished_traversal) {
-		unordered_map<uint32_t, module *>::iterator iter = proc->module_list.begin();
-		set<uint32_t> bases_to_remove;
+		unordered_map</*uint32_t*/target_ulong, module *>::iterator iter = proc->module_list.begin();
+		set</*uint32_t*/target_ulong> bases_to_remove;
 		for(; iter!=proc->module_list.end(); iter++) {
 			if (module_bases.find(iter->first) == module_bases.end())
 				bases_to_remove.insert(iter->first);
 		}
 
-		set<uint32_t>::iterator iter2;
+		set</*uint32_t*/target_ulong>::iterator iter2;
 		for (iter2=bases_to_remove.begin(); iter2!=bases_to_remove.end(); iter2++) {
 			if (proc->pid == 1)
 				monitor_printf(default_mon, "removed module %08x\n", *iter2);
@@ -846,7 +846,7 @@ process * find_new_process(CPUState *env, /*uint32_t*/target_ulong cr3) {
 // retrive symbols from specific process
 static void retrive_symbols(CPUState *env, process * proc) {
 	if (!proc || proc->cr3 == -1UL) return;	// unnecessary check
-	for (unordered_map < uint32_t,module * >::iterator it = proc->module_list.begin();
+	for (unordered_map </* uint32_t*/target_ulong,module * >::iterator it = proc->module_list.begin();
 		it != proc->module_list.end(); it++) {
 		module *cur_mod = it->second;
 		if (!cur_mod->symbols_extracted)
@@ -861,7 +861,7 @@ static void retrive_symbols(CPUState *env, process * proc) {
 void Linux_tlb_call_back(DECAF_Callback_Params *temp)
 {
 	CPUState *ourenv = temp->tx.env;
-	uint32_t vaddr = temp->tx.vaddr;
+	/*uint32_t*/target_ulong vaddr = temp->tx.vaddr;
 	uint32_t pgd = -1;
 	process *proc = NULL;
 	bool found_new = false;
@@ -935,7 +935,7 @@ static void check_procexit(void *) {
 		}
 	}
 
-	unordered_map<uint32_t, process *>::iterator iter = process_pid_map.begin();
+	unordered_map</*uint32_t*/target_ulong, process *>::iterator iter = process_pid_map.begin();
 	for(; iter != process_pid_map.end(); iter++)
 	{
 		vmi_pids.insert(iter->first);
