@@ -63,7 +63,7 @@ void handle_guest_message(const char *message)
 
 
 //FIXME: this function may potentially overflow "buf" --Heng
-static inline int readustr_with_cr3(uint32_t addr, uint32_t cr3, void *buf,
+static inline int readustr_with_cr3(/*uint32_t*/target_ulong addr, /*uint32_t*/target_ulong cr3, void *buf,
     CPUState *_env) {
   uint32_t unicode_data[2];
   int i, j, unicode_len = 0;
@@ -100,7 +100,7 @@ int is_fullname_retrieved(process *proc)
     return 1;
 
 
-    uint32_t /*target_ulong*/ index = 0;
+    uint32_t index = 0;
     for (iter = proc->module_list.begin(); iter != proc->module_list.end();
         iter++) {
        m = iter->second;
@@ -126,7 +126,7 @@ int update_kernel_modules(CPUState * _env, gva_t vaddr)
 }
 
 int procmod_insert_modinfo(/*uint32_t*/target_ulong pid, /*uint32_t*/target_ulong cr3, const char *name,
-			  /* uint32_t*/target_ulong base, uint32_t size, const char *full_name)
+			  /* uint32_t*/target_ulong base, /*uint32_t*/target_ulong size, const char *full_name)
 {
   assert(strlen(name) < VMI_MAX_MODULE_PROCESS_NAME_LEN);
   assert(strlen(full_name) < VMI_MAX_MODULE_FULL_NAME_LEN);
@@ -216,7 +216,7 @@ int procmod_removeproc(/*uint32_t*/target_ulong pid)
 	return 0;
 }
 
-int procmod_update_name(uint32_t pid, char *name)
+int procmod_update_name(/*uint32_t*/target_ulong pid, char *name)
 {
 	
   VMI_update_name( pid, name);
@@ -343,9 +343,9 @@ int procmod_init()
 void parse_process(const char *log)
 {
 	char c;
-	uint32_t pid;
-	uint32_t parent_pid = -1;
-	uint32_t cr3;
+	/*uint32_t*/target_ulong pid;
+	/*uint32_t*/target_ulong parent_pid = -1;
+	/*uint32_t*/target_ulong cr3;
 	char name[16]="";
 
 
@@ -375,7 +375,7 @@ void parse_process(const char *log)
 void parse_module(const char *log)
 {
  
-  uint32_t pid, cr3, base, size;
+  /*uint32_t*/target_ulong pid, cr3, base, size;
   char mod[GUEST_MESSAGE_LEN];
   char full_mod[GUEST_MESSAGE_LEN]="";
   char c = '+';

@@ -118,8 +118,7 @@ extern gpa_t DECAF_get_phys_addr_with_pgd(CPUState* env, gpa_t pgd, gva_t addr);
 
 extern DECAF_errno_t DECAF_memory_rw(CPUState* env, gva_t addr, void *buf, int len, int is_write);
 
-DECAF_errno_t DECAF_memory_rw_with_pgd(CPUState* env, target_ulong pgd, gva_t addr, void *buf,
-                            int len, int is_write);
+DECAF_errno_t DECAF_memory_rw_with_pgd(CPUState* env, target_ulong pgd, gva_t addr, void *buf, int len, int is_write);
 
 /// \brief Read from a memory region by its virtual address.
 ///

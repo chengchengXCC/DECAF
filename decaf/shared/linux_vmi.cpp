@@ -862,7 +862,7 @@ void Linux_tlb_call_back(DECAF_Callback_Params *temp)
 {
 	CPUState *ourenv = temp->tx.env;
 	/*uint32_t*/target_ulong vaddr = temp->tx.vaddr;
-	uint32_t pgd = -1;
+	/*uint32_t*/target_ulong pgd = -1;
 	process *proc = NULL;
 	bool found_new = false;
 	pgd = DECAF_getPGD(ourenv);

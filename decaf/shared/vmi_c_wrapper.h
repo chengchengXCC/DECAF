@@ -18,7 +18,7 @@ typedef struct _tmodinfo
 {
 	char	    name[512]; ///< module name
 	/*uint32_t*/target_ulong	base;  ///< module base address
-	/*uint32_t*/target_ulong	size;  ///< module size
+	/*uint32_t*/ target_ulong	size;  ///< module size
 }tmodinfo_t;
 
 typedef struct _old_tmodinfo

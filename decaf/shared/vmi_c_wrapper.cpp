@@ -81,7 +81,7 @@ int  VMI_locate_module_c(gva_t eip, gva_t cr3, char proc[],tmodinfo_t *tm)
 
 }
 
-int VMI_locate_module_byname_c(const char *name, uint32_t pid,tmodinfo_t * tm)
+int VMI_locate_module_byname_c(const char *name, /*uint32_t*/target_ulong pid,tmodinfo_t * tm)
 {
 	module * m = NULL;
 	process * p = NULL;
@@ -105,7 +105,7 @@ int VMI_locate_module_byname_c(const char *name, uint32_t pid,tmodinfo_t * tm)
 }
 
 
-int VMI_find_cr3_by_pid_c(uint32_t pid)
+int VMI_find_cr3_by_pid_c(/*uint32_t*/target_ulong pid)
 {
 	process * p = NULL;
 	p = VMI_find_process_by_pid(pid);
@@ -115,7 +115,7 @@ int VMI_find_cr3_by_pid_c(uint32_t pid)
 
 }
 
-int VMI_find_pid_by_cr3_c(uint32_t cr3)
+int VMI_find_pid_by_cr3_c(/*uint32_t*/target_ulong cr3)
 {
 	process * p = NULL;
 	p  = VMI_find_process_by_pgd(cr3);
@@ -134,7 +134,7 @@ int VMI_find_pid_by_name_c(const char* proc_name)
 }
 
 
-int VMI_find_process_by_cr3_c(uint32_t cr3, char proc_name[], size_t len, uint32_t *pid)
+int VMI_find_process_by_cr3_c(/*uint32_t*/target_ulong cr3, char proc_name[], size_t len, /*uint32_t*/target_ulong *pid)
 {
 	process *p = NULL;
 	p = VMI_find_process_by_pgd(cr3);
@@ -150,7 +150,7 @@ int VMI_find_process_by_cr3_c(uint32_t cr3, char proc_name[], size_t len, uint32
 
 }
 
-int VMI_find_process_by_pid_c(uint32_t pid, char proc_name[], size_t len, uint32_t *cr3)
+int VMI_find_process_by_pid_c(/*uint32_t*/target_ulong pid, char proc_name[], size_t len, /*uint32_t*/target_ulong *cr3)
 {
 	process *p = NULL;
 	p = VMI_find_process_by_pid(pid);
@@ -165,7 +165,7 @@ int VMI_find_process_by_pid_c(uint32_t pid, char proc_name[], size_t len, uint32
 	return 0;
 
 }
-int VMI_get_loaded_modules_count_c(uint32_t pid)
+int VMI_get_loaded_modules_count_c(/*uint32_t*/target_ulong pid)
 {
 	process *p = NULL;
 	p = VMI_find_process_by_pid(pid);
@@ -232,8 +232,7 @@ int VMI_list_processes(Monitor *mon)
 
 	for (iter = process_map.begin(); iter != process_map.end(); iter++) {
 		proc = iter->second;
-		monitor_printf(mon, "%d\tcr3=0x%08x\t%s\n", proc->pid, proc->cr3,
-				proc->name);
+		monitor_printf(mon, "%d\tcr3=0x%08x\t%s\n", proc->pid, proc->cr3, proc->name);
 	}
 
 	return 0;
@@ -258,7 +257,7 @@ int VMI_list_modules(Monitor *mon, /*uint32_t*/target_ulong pid) {
 
 	for (iter_m = modules.begin(); iter_m!=modules.end(); iter_m++) {
 		module *mod = iter_m->second;
-		uint32_t base = iter_m->first;
+		/*uint32_t*/target_ulong base = iter_m->first;
 		monitor_printf(mon, "%20s\t0x%08x\t0x%08x\n", mod->name, base,
 			mod->size);
 	}

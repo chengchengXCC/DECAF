@@ -26,7 +26,7 @@ extern mon_cmd_t DECAF_info_cmds[];
 extern void DECAF_nic_receive(const uint8_t * buf, const int size, const int cur_pos, const int start, const int stop);
 extern void DECAF_nic_send(const uint32_t addr, const int size, const uint8_t * buf);
 extern void DECAF_nic_in(const uint32_t addr, const int size);
-extern void DECAF_nic_out(const uint32_t addr, const int size);
+extern void DECAF_nic_out(const uint32_t  addr, const int size);
 extern void DECAF_read_keystroke(void *s);
 extern void DECAF_virtdev_init(void);
 extern void DECAF_after_loadvm(const char *); // AWH void);
