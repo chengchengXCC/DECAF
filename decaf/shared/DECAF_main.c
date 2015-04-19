@@ -61,12 +61,12 @@ mon_cmd_t DECAF_info_cmds[] = {
 
 int g_bNeedFlush = 0;
 
-static void convert_endian_4b(/*uint32_t*/target_ulong *data);
+static void convert_endian_4b(uint32_t/*target_ulong*/ *data);
 
 
 static gpa_t _DECAF_get_phys_addr(CPUState* env, gva_t addr) {
 	int mmu_idx, index;
-	/*uint32_t*/target_ulong phys_addr;
+	uint32_t/*target_ulong*/ phys_addr;
 
 	index = (addr >> TARGET_PAGE_BITS) & (CPU_TLB_SIZE - 1);
 	mmu_idx = cpu_mmu_index(env);
@@ -396,7 +396,7 @@ void DECAF_stop_vm(void) {
 void DECAF_start_vm(void) {
 	// if (runningState) vm_start();
     if (!runstate_is_running()) {
-        printf("running\n");
+      //  printf("running\n");
 	vm_start();
     }	
 }
@@ -433,7 +433,7 @@ static void DECAF_save(QEMUFile * f, void *opaque) {
 	//we only save guest.log when no plugin is loaded
 	if (len == 1) {
 		FILE *fp = fopen("guest.log", "r");
-		/*uint32_t*/target_ulong size;
+		uint32_t/*target_ulong*/ size;
 		if (!fp) {
 			fprintf(stderr, "cannot open guest.log!\n");
 			return;
@@ -642,7 +642,7 @@ DECAF_errno_t DECAF_read_ptr(CPUState* env, gva_t vaddr, gva_t *pptr)
 	return ret;
 }
 
-static void convert_endian_4b(/*uint32_t*/target_ulong *data)
+static void convert_endian_4b(uint32_t/*target_ulong*/ *data)
 {
    *data = ((*data & 0xff000000) >> 24)
          | ((*data & 0x00ff0000) >>  8)
