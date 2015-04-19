@@ -69,10 +69,10 @@ typedef struct _plugin_interface {
   /// 0 means system-wide monitoring, including all processes and kernel.
   union
   {
-    /*uint32_t*/target_ulong monitored_cr3;
-    /*uint32_t*/target_ulong monitored_pgd; //alias
-  };
-} plugin_interface_t;
+    uint32_t/*target_ulong*/ monitored_cr3;
+    uint32_t/*target_ulong*/ monitored_pgd; //alias
+   };
+ } plugin_interface_t;
 
 extern plugin_interface_t *decaf_plugin;
 
@@ -202,8 +202,8 @@ void DECAF_flushTranslationPage_env(CPUState* env, gva_t addr);
 //These are DECAF wrappers that does flushing for all VCPUs
 
 //Iterates through all virtual cpus and flushes the blocks
-static inline void DECAF_flushTranslationBlock(/*uint32_t*/target_ulong addr)
-{
+static inline void DECAF_flushTranslationBlock(uint32_t/*target_ulong*/ addr)
+ {
   CPUState* env;
   DECAF_stop_vm();
   for(env = first_cpu; env != NULL; env = env->next_cpu)
@@ -214,8 +214,8 @@ static inline void DECAF_flushTranslationBlock(/*uint32_t*/target_ulong addr)
 }
 
 //Iterates through all virtual cpus and flushes the pages
-static inline void DECAF_flushTranslationPage(/*uint32_t*/target_ulong addr)
-{
+static inline void DECAF_flushTranslationPage(uint32_t/*target_ulong*/ addr)
+ {
   CPUState* env;
   DECAF_stop_vm();
   for(env = first_cpu; env != NULL; env = env->next_cpu)
