@@ -35,53 +35,53 @@ extern "C" {
 typedef struct _tmodinfo
 {
 	char	    name[512]; ///< module name
-	/*uint32_t*/target_ulong base;  ///< module base address
-	/*uint32_t*/target_ulong	size;  ///< module size
+	uint32_t/*target_ulong*/ base;  ///< module base address
+	uint32_t/*target_ulong*/	size;  ///< module size
 }tmodinfo_t;
 
 typedef struct _old_tmodinfo
 {
   char name[32];
-  /*uint32_t*/target_ulong base;
-  /*uint32_t*/target_ulong size;
-}old_modinfo_t;
+  uint32_t/*target_ulong*/ base;
+  uint32_t/*target_ulong*/ size;
+ }old_modinfo_t;
 
 typedef struct _procinfo
 {
-  /*uint32_t*/target_ulong pid;
-  /*uint32_t*/target_ulong cr3;
+  uint32_t/*target_ulong*/ pid;
+  uint32_t/*target_ulong*/ cr3;
   size_t n_mods;
   char name[512];
 }procinfo_t;
 
 typedef struct _CreateProc_Params
 {
-  /*uint32_t*/target_ulong pid;
-  /*uint32_t*/target_ulong cr3;
-}CreateProc_Params;
-typedef void (*createproc_notify_t)(CreateProc_Params* params);
+  uint32_t/*target_ulong*/ pid;
+  uint32_t/*target_ulong*/ cr3;
+ }CreateProc_Params;
+ typedef void (*createproc_notify_t)(CreateProc_Params* params);
 
 typedef struct _RemoveProc_Params
 {
-  /*uint32_t*/target_ulong pid;
+  uint32_t/*target_ulong*/ pid;
 }RemoveProc_Params;
 typedef void (*removeproc_notify_t)(RemoveProc_Params* params);
 
 typedef struct _LoadModule_Params
 {
-  /*uint32_t*/target_ulong pid;
-  /*uint32_t*/target_ulong cr3;
+  uint32_t/*target_ulong*/ pid;
+  uint32_t/*target_ulong*/ cr3;
   char* name;
   gva_t base;
- /* uint32_t*/target_ulong size;
+  uint32_t/*target_ulong*/ size;
   char* full_name;
 }LoadModule_Params;
 typedef void (*loadmodule_notify_t)(LoadModule_Params* params);
 
 typedef struct _LoadMainModule_Params
 {
-  /*uint32_t*/target_ulong pid;
-  /*uint32_*/target_ulong cr3;
+  uint32_t/*target_ulong*/ pid;
+  uint32_t/*target_ulong*/ cr3;
   const char* name;
 }LoadMainModule_Params;
 typedef void (*loadmainmodule_notify_t)(LoadMainModule_Params* params);
@@ -120,7 +120,7 @@ int procmod_unregister_callback(procmod_callback_type_t cb_type, DECAF_Handle ha
 /// @param cr3 memory space id: physical address of page table
 /// @param proc process name (output argument)
 /// @return tmodinfo_t structure 
-extern tmodinfo_t * locate_module(/*uint32_t*/target_ulong eip, /*uint32_t*/target_ulong cr3, char proc[]);
+extern tmodinfo_t * locate_module(uint32_t/*target_ulong*/ eip, uint32_t/*target_ulong*/ cr3, char proc[]);
 
 /// @ingroup semantics
 /// find process given a memory space id
@@ -128,7 +128,7 @@ extern tmodinfo_t * locate_module(/*uint32_t*/target_ulong eip, /*uint32_t*/targ
 /// @param proc process name (output argument)
 /// @param pid  process pid (output argument)
 /// @return number of modules in this process 
-extern int find_process(/*uint32_t*/target_ulong cr3, char proc[], size_t len, /*uint32_t*/target_ulong *pid);
+extern int find_process(uint32_t/*target_ulong*/ cr3, char proc[], size_t len, uint32_t/*target_ulong*/ *pid);
 
 //int delete_thread_by_tid(uint32_t tid);
 //int remove_threads_by_cr3(uint32_t cr3);
@@ -139,27 +139,27 @@ extern int find_process(/*uint32_t*/target_ulong cr3, char proc[], size_t len, /
 /// This function only works in Windows XP for Now. 
 extern uint32_t get_current_tid(CPUState* env);
 
-extern void get_proc_modules(/*uint32_t*/target_ulong pid, old_modinfo_t *buf, int size);
+extern void get_proc_modules(uint32_t/*target_ulong*/ pid, old_modinfo_t *buf, int size);
 
 
 //Aravind - added to get the number of loaded modules for the process. This is needed to create the memory required by get_proc_modules
-extern int get_loaded_modules_count(/*uint32_t*/target_ulong pid);
+extern int get_loaded_modules_count(uint32_t/*target_ulong*/ pid);
 //end - Aravind
 
 extern int procmod_init(void);
 
 extern void procmod_cleanup(void);
 
-extern /*uint32_t*/target_ulong find_cr3(/*uint32_t*/target_ulong pid);
+extern uint32_t/*target_ulong*/ find_cr3(uint32_t/*target_ulong*/ pid);
 
-extern /*uint32_t*/target_ulong find_pid(/*uint32_t*/target_ulong cr3);
+extern uint32_t/*target_ulong*/ find_pid(uint32_t/*target_ulong*/ cr3);
 
-extern /*uint32_t*/target_ulong find_pid_by_name(const char* proc_name);
+extern uint32_t/*target_ulong*/ find_pid_by_name(const char* proc_name);
 
 extern void list_procs(Monitor *mon); // AWH void);
 //extern void do_linux_ps(Monitor *mon); // AWH void);
 extern void linux_ps(Monitor *mon, int mmap_flag);
-extern void list_guest_modules(Monitor *mon, /*uint32_t*/target_ulong pid);
+extern void list_guest_modules(Monitor *mon, uint32_t/*target_ulong*/ pid);
 
 void parse_process(const char *log);
 void parse_module(const char *log);
@@ -168,23 +168,23 @@ void parse_module(const char *log);
 /// This function is only used to update process and module information for Linux
 extern void update_proc(void *opaque);
 
-extern int checkcr3(/*uint32_t*/target_ulong cr3, /*uint32_t*/target_ulong eip, /*uint32_t*/target_ulong tracepid, char *name,
-             int len, /*uint32_t*/target_ulong * offset);
+extern int checkcr3(uint32_t/*target_ulong*/ cr3, uint32_t/*target_ulong*/ eip, uint32_t/*target_ulong*/ tracepid, char *name,
+             int len, uint32_t/*target_ulong*/ * offset);
 
 /// @ingroup semantics
 /// This function inserts the module information 
-extern int procmod_insert_modinfo(/*uint32_t*/target_ulong pid, /*uint32_t*/target_ulong cr3, const char *name,
-                           /*uint32_t*/target_ulong base, /*uint32_t*/target_ulong size);
+extern int procmod_insert_modinfo(uint32_t/*target_ulong*/ pid, uint32_t/*target_ulong*/ cr3, const char *name,
+                           uint32_t/*target_ulong*/ base, uint32_t/*target_ulong*/ size);
 
 
-extern tmodinfo_t *locate_module_byname(const char *name, /*uint32_t*/target_ulong pid);
+extern tmodinfo_t *locate_module_byname(const char *name, uint32_t/*target_ulong*/ pid);
 
 /* Create array with info about all processes running in system 
    Caller is in charge of freeing the returned array */
 extern procinfo_t* find_all_processes_info(size_t *num_proc);
 
 /* find process name and CR3 using the PID as search key  */
-extern int find_process_by_pid(/*uint32_t*/target_ulong pid, char proc_name[], size_t len, /*uint32_t*/target_ulong *cr3);
+extern int find_process_by_pid(uint32_t/*target_ulong*/ pid, char proc_name[], size_t len, uint32_t/*target_ulong*/ *cr3);
 
 extern int is_guest_windows(void);
 
