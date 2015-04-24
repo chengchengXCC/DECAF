@@ -45,16 +45,16 @@ public:
 
 class process{
 public:
-    uint32_t/*target_ulong*/ cr3;
-    uint32_t/*target_ulong*/ pid;
-    uint32_t/*target_ulong*/ parent_pid;
-    uint32_t/*target_ulong*/ EPROC_base_addr;
+   /*uint32_t*/target_ulong cr3;
+    /*uint32_t*/target_ulong pid;
+    /*uint32_t*/target_ulong parent_pid;
+    /*uint32_t*/target_ulong EPROC_base_addr;
     char name[VMI_MAX_MODULE_PROCESS_NAME_LEN];
     //map base address to module pointer
-    unordered_map <uint32_t/*target_ulong*/,module * >module_list;
+    unordered_map </*uint32_t*/target_ulong,module * >module_list;
     //a set of virtual pages that have been resolved with module information
-    unordered_set<uint32_t/*target_ulong*/> resolved_pages;
-    unordered_map<uint32_t/*target_ulong*/, int > unresolved_pages;
+    unordered_set</*uint32_t*/target_ulong> resolved_pages;
+    unordered_map</*uint32_t*/target_ulong, int > unresolved_pages;
 };
 
 
@@ -72,19 +72,19 @@ typedef struct os_handle_c{
 
 extern target_ulong VMI_guest_kernel_base;
 
-extern unordered_map < uint32_t/*target_ulong*/, process * >process_map;
-extern unordered_map < uint32_t/*target_ulong*/, process * >process_pid_map;
+extern unordered_map </* uint32_t*/target_ulong, process * >process_map;
+extern unordered_map </* uint32_t*/target_ulong, process * >process_pid_map;
 extern unordered_map < string, module * >module_name;
 
 module * VMI_find_module_by_pc(target_ulong pc, target_ulong pgd, target_ulong *base);
 
 module * VMI_find_module_by_name(const char *name, target_ulong pgd, target_ulong *base);
 
-module * VMI_find_module_by_base(target_ulong pgd,uint32_t/*target_ulong*/ base);
+module * VMI_find_module_by_base(target_ulong pgd,/*uint32_t*/target_ulong base);
 
-process * VMI_find_process_by_pid(uint32_t/*target_ulong*/ pid);
+process * VMI_find_process_by_pid(/*uint32_t*/target_ulong pid);
 
-process * VMI_find_process_by_pgd(uint32_t/*target_ulong*/ pgd);
+process * VMI_find_process_by_pgd(/*uint32_t*/target_ulong pgd);
 
 process* VMI_find_process_by_name(const char *name);
 
@@ -95,11 +95,11 @@ module* VMI_find_module_by_key(const char *key);
 
 
 int VMI_create_process(process *proc);
-int VMI_remove_process(uint32_t/*target_ulong*/ pid);
+int VMI_remove_process(/*uint32_t*/target_ulong pid);
 int VMI_update_name(uint32_t/*target_ulong*/ pid, char *name);
 int VMI_remove_all();
-int VMI_insert_module(uint32_t/*target_ulong*/ pid, uint32_t/*target_ulong*/ base, module *mod);
-int VMI_remove_module(uint32_t/*target_ulong*/ pid, uint32_t/*target_ulong*/ base);
+int VMI_insert_module(/*uint32_t*/target_ulong pid, /*uint32_t*/target_ulong base, module *mod);
+int VMI_remove_module(/*uint32_t*/target_ulong pid, /*uint32_t*/target_ulong base);
 int VMI_dipatch_lmm(process *proc);
 int VMI_dispatch_lm(module * m,process *proc, gva_t base);
 extern "C" void VMI_init();

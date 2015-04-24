@@ -173,8 +173,8 @@ extern int checkcr3(uint32_t/*target_ulong*/ cr3, uint32_t/*target_ulong*/ eip, 
 
 /// @ingroup semantics
 /// This function inserts the module information 
-extern int procmod_insert_modinfo(uint32_t/*target_ulong*/ pid, uint32_t/*target_ulong*/ cr3, const char *name,
-                           uint32_t/*target_ulong*/ base, uint32_t/*target_ulong*/ size);
+extern int procmod_insert_modinfo(/*uint32_t*/target_ulong pid, /*uint32_t*/target_ulong cr3, const char *name,
+                           /*uint32_t*/target_ulong base, /*uint32_t*/target_ulong size);
 
 
 extern tmodinfo_t *locate_module_byname(const char *name, uint32_t/*target_ulong*/ pid);

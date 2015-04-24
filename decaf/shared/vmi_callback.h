@@ -31,11 +31,11 @@ typedef struct _VMI_CreateProc_Params {
 typedef VMI_CreateProc_Params VMI_RemoveProc_Params;
 
 typedef struct _VMI_LoadModule_Params {
-	  uint32_t pid;
-	  uint32_t cr3;
+	  /*uint32_t*/target_ulong pid;
+	  /*uint32_t*/target_ulong cr3;
 	  char* name;
 	  gva_t base;
-	  uint32_t size;
+	  /*uint32_t*/target_ulong size;
 	  char* full_name;
 }VMI_LoadModule_Params;
 

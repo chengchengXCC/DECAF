@@ -67,7 +67,7 @@ extern int VMI_find_process_by_cr3_c(uint32_t/*target_ulong*/ cr3, char proc_nam
 /* find process name and CR3 using the PID as search key  */
 extern int VMI_find_process_by_pid_c(uint32_t/*target_ulong*/ pid, char proc_name[], size_t len, uint32_t/*target_ulong*/ *cr3);
 
-extern int VMI_get_proc_modules_c(uint32_t/*target_ulong*/ pid, uint32_t/*target_ulong*/ mod_no, tmodinfo_t *buf);
+extern int VMI_get_proc_modules_c(/*uint32_t*/target_ulong pid, /*uint32_t*/target_ulong mod_no, tmodinfo_t *buf);
 
 extern int VMI_get_all_processes_count_c(void);
 /* Create array with info about all processes running in system
@@ -92,7 +92,7 @@ extern int VMI_get_current_tid_c(CPUState* env);
 extern int VMI_get_guest_version_c(void);
 
 
-extern int VMI_list_modules(Monitor *mon, uint32_t/*target_ulong*/ pid);
+extern int VMI_list_modules(Monitor *mon, /*uint32_t*/target_ulong pid);
 extern int VMI_list_processes(Monitor *mon);
 
 #ifdef __cplusplus

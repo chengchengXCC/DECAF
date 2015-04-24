@@ -100,9 +100,9 @@ static inline bool is_vm_page_resolved(process *proc, uint32_t/*target_ulong*/ a
 	return (proc->resolved_pages.find(addr >> 12) != proc->resolved_pages.end());
 }
 
-static inline int unresolved_attempt(process *proc,uint32_t/*target_ulong*/ addr)
+static inline int unresolved_attempt(process *proc,/*uint32_t*/target_ulong addr)
 {
-	unordered_map <uint32_t/*target_ulong*/, int>::iterator iter = proc->unresolved_pages.find(addr>>12);
+	unordered_map </*uint32_t*/target_ulong, int>::iterator iter = proc->unresolved_pages.find(addr>>12);
 	if(iter == proc->unresolved_pages.end()) {
 		proc->unresolved_pages[addr>>12] = 1;
 		return 1;
@@ -363,14 +363,14 @@ next:
 	}
 
 	if (finished_traversal) {
-		unordered_map<uint32_t/*target_ulong*/, module *>::iterator iter = proc->module_list.begin();
-		set<uint32_t/*target_ulong*/> bases_to_remove;
+		unordered_map</*uint32_t*/target_ulong, module *>::iterator iter = proc->module_list.begin();
+		set</*uint32_t*/target_ulong> bases_to_remove;
 		for(; iter!=proc->module_list.end(); iter++) {
 			if (module_bases.find(iter->first) == module_bases.end())
 				bases_to_remove.insert(iter->first);
 		}
 
-		set<uint32_t/*target_ulong*/>::iterator iter2;
+		set</*uint32_t*/target_ulong>::iterator iter2;
 		for (iter2=bases_to_remove.begin(); iter2!=bases_to_remove.end(); iter2++) {
 			if (proc->pid == 1)
 				monitor_printf(default_mon, "removed module %08x\n", *iter2);
@@ -528,14 +528,14 @@ next:
 	}
 
 	if (finished_traversal) {
-		unordered_map<uint32_t/*target_ulong*/, module *>::iterator iter = proc->module_list.begin();
-		set<uint32_t/*target_ulong*/> bases_to_remove;
+		unordered_map</*uint32_t*/target_ulong, module *>::iterator iter = proc->module_list.begin();
+		set</*uint32_t*/target_ulong> bases_to_remove;
 		for(; iter!=proc->module_list.end(); iter++) {
 			if (module_bases.find(iter->first) == module_bases.end())
 				bases_to_remove.insert(iter->first);
 		}
 
-		set<uint32_t/*target_ulong*/>::iterator iter2;
+		set</*uint32_t*/target_ulong>::iterator iter2;
 		for (iter2=bases_to_remove.begin(); iter2!=bases_to_remove.end(); iter2++) {
 			if (proc->pid == 1)
 				monitor_printf(default_mon, "removed module %08x\n", *iter2);
@@ -722,14 +722,14 @@ next:
 	}
 
 	if (finished_traversal) {
-		unordered_map<uint32_t/*target_ulong*/, module *>::iterator iter = proc->module_list.begin();
-		set<uint32_t/*target_ulong*/> bases_to_remove;
+		unordered_map</*uint32_t*/target_ulong, module *>::iterator iter = proc->module_list.begin();
+		set</*uint32_t*/target_ulong> bases_to_remove;
 	 	for(; iter!=proc->module_list.end(); iter++) {
 			if (module_bases.find(iter->first) == module_bases.end())
 				bases_to_remove.insert(iter->first);
 		}
 
-		set<uint32_t/*target_ulong*/>::iterator iter2;
+		set</*uint32_t*/target_ulong>::iterator iter2;
 	 	for (iter2=bases_to_remove.begin(); iter2!=bases_to_remove.end(); iter2++) {
 			if (proc->pid == 1)
 				monitor_printf(default_mon, "removed module %08x\n", *iter2);
@@ -746,8 +746,8 @@ next:
 // process * find_new_process(CPUState *env, uint32_t cr3) __attribute__((optimize("O0")));
 // scan the task list and find new process
 static
-process * find_new_process(CPUState *env, uint32_t /*target_ulong*/ cr3) {
-	uint32_t /*target_ulong*/ task_pid = 0, ts_parent_pid = 0, proc_cr3 = -1;
+process * find_new_process(CPUState *env, /*uint32_t*/ target_ulong cr3) {
+	/*uint32_t*/ target_ulong task_pid = 0, ts_parent_pid = 0, proc_cr3 = -1;
 	const int MAX_LOOP_COUNT = 1024; // maximum loop count when trying to find a new process (will there be any?)
 	process *right_proc = NULL;
 
@@ -846,7 +846,7 @@ process * find_new_process(CPUState *env, uint32_t /*target_ulong*/ cr3) {
 // retrive symbols from specific process
 static void retrive_symbols(CPUState *env, process * proc) {
 	if (!proc || proc->cr3 == -1UL) return;	// unnecessary check
-	for (unordered_map <uint32_t/*target_ulong*/,module * >::iterator it = proc->module_list.begin();
+	for (unordered_map </*uint32_t*/target_ulong,module * >::iterator it = proc->module_list.begin();
 		it != proc->module_list.end(); it++) {
 		module *cur_mod = it->second;
 		if (!cur_mod->symbols_extracted)
@@ -935,7 +935,7 @@ static void check_procexit(void *) {
 		}
 	}
 
-	unordered_map<uint32_t/*target_ulong*/, process *>::iterator iter = process_pid_map.begin();
+	unordered_map</*uint32_t*/target_ulong, process *>::iterator iter = process_pid_map.begin();
 	for(; iter != process_pid_map.end(); iter++)
 	{
 		vmi_pids.insert(iter->first);

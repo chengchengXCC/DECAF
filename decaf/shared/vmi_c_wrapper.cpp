@@ -174,14 +174,14 @@ int VMI_get_loaded_modules_count_c(uint32_t/*target_ulong*/ pid)
 	return p->module_list.size();
 
 }
-int VMI_get_proc_modules_c(uint32_t/*target_ulong*/ pid, uint32_t/*target_ulong*/ mod_no, tmodinfo_t *buf)
+int VMI_get_proc_modules_c(/*uint32_t*/target_ulong pid, /*uint32_t*/target_ulong mod_no, tmodinfo_t *buf)
 {
 	   process *p = NULL;
 	   p = VMI_find_process_by_pid(pid);
 	   module * m = NULL;
 	   if(!p)
 		   return -1;
-		unordered_map<uint32_t/*target_ulong*/, module *>::iterator iter;
+		unordered_map</*uint32_t*/target_ulong, module *>::iterator iter;
 		uint32_t index = 0;
 		for (iter = p->module_list.begin(); iter != p->module_list.end();
 				iter++) {
@@ -201,7 +201,7 @@ int VMI_get_all_processes_count_c(void)
 
 int VMI_find_all_processes_info_c(size_t num_proc, procinfo_t *arr)
 {
-	    unordered_map <uint32_t/*target_ulong*/, process * >::iterator iter;
+	    unordered_map </*uint32_t*/target_ulong, process * >::iterator iter;
 	    size_t nproc;
 	    uint32_t idx = 0;
 	    nproc = process_map.size();
@@ -228,7 +228,7 @@ int VMI_find_all_processes_info_c(size_t num_proc, procinfo_t *arr)
 int VMI_list_processes(Monitor *mon)
 {
 	process *proc;
-	unordered_map<uint32_t/*target_ulong*/, process *>::iterator iter;
+	unordered_map</*uint32_t*/target_ulong, process *>::iterator iter;
 
 	for (iter = process_map.begin(); iter != process_map.end(); iter++) {
 		proc = iter->second;
@@ -239,15 +239,15 @@ int VMI_list_processes(Monitor *mon)
 }
 
 
-int VMI_list_modules(Monitor *mon, uint32_t/*target_ulong*/ pid) {
-	unordered_map<uint32_t/*target_ulong*/, process *>::iterator iter = process_pid_map.find(pid);
+int VMI_list_modules(Monitor *mon, /*uint32_t*/target_ulong pid) {
+	unordered_map</*uint32_t*/target_ulong, process *>::iterator iter = process_pid_map.find(pid);
 	if (iter == process_pid_map.end())	//pid not found
 		return -1;
 
-	unordered_map<uint32_t/*target_ulong*/, module *>::iterator iter2;
+	unordered_map</*uint32_t*/target_ulong, module *>::iterator iter2;
 	process *proc = iter->second;
-	map<uint32_t/*target_ulong*/, module *> modules;
-	map<uint32_t/*target_ulong*/, module *>::iterator iter_m;
+	map</*uint32_t*/target_ulong, module *> modules;
+	map</*uint32_t*/target_ulong, module *>::iterator iter_m;
 
 	for (iter2 = proc->module_list.begin(); iter2 != proc->module_list.end();
 			iter2++) {
@@ -256,7 +256,7 @@ int VMI_list_modules(Monitor *mon, uint32_t/*target_ulong*/ pid) {
 
 	for (iter_m = modules.begin(); iter_m!=modules.end(); iter_m++) {
 		module *mod = iter_m->second;
-		uint32_t/*target_ulong*/ base = iter_m->first;
+		/*uint32_t*/target_ulong base = iter_m->first;
 		monitor_printf(mon, "%20s\t0x%08x\t0x%08x\n", mod->name, base,
 			mod->size);
 	}

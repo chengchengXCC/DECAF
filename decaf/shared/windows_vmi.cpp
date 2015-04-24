@@ -111,9 +111,9 @@ static inline int is_page_resolved(process *proc, uint32_t/*target_ulong*/ page_
 	return (proc->resolved_pages.find(page_num>>12) != proc->resolved_pages.end());
 }
 
-static inline int unresolved_attempt(process *proc, uint32_t/*target_ulong*/ addr)
+static inline int unresolved_attempt(process *proc, /*uint32_t*/target_ulong addr)
 {
-	unordered_map <uint32_t/*target_ulong*/, int>::iterator iter = proc->unresolved_pages.find(addr>>12);
+	unordered_map </*uint32_t*/target_ulong, int>::iterator iter = proc->unresolved_pages.find(addr>>12);
 	if(iter == proc->unresolved_pages.end()) {
 		proc->unresolved_pages[addr>>12] = 1;
 		return 1;
@@ -470,7 +470,7 @@ static void extract_PE_info(uint32_t cr3, uint32_t base, module *mod, CPUState *
 
 static void retrieve_missing_symbols(process *proc, CPUState *_env)
 {
-	unordered_map < uint32_t/*target_ulong*/,module * >::iterator iter = proc->module_list.begin();
+	unordered_map </*uint32_t*/target_ulong,module * >::iterator iter = proc->module_list.begin();
 
 	for(; iter!=proc->module_list.end(); iter++) {
 		module *cur_mod = iter->second;
@@ -686,7 +686,7 @@ void check_procexit(void *)
 	uint32_t end_time[2];
 	vector<target_ulong> pid_list;
 
-	unordered_map < uint32_t/*target_ulong*/, process * >::iterator iter = process_map.begin();
+	unordered_map </*uint32_t*/target_ulong, process * >::iterator iter = process_map.begin();
 	for (; iter!=process_map.end(); iter++) {
 		process *proc = iter->second;
 		if (proc->parent_pid == 0)
