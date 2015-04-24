@@ -150,10 +150,10 @@ void DECAF_after_iret_protected(void)
 }
 #endif
 
-int DECAF_get_page_access(CPUState* env,uint32_t /*target_ulong*/ addr)
+int DECAF_get_page_access(CPUState* env,/*uint32_t*/target_ulong addr)
 {
-    uint32_t pde_addr, pte_addr;
-    uint32_t pde, pte;
+    /*uint32_t*/target_ulong pde_addr, pte_addr;
+    /*uint32_t*/target_ulong pde, pte;
 
     if (env == NULL)
     {
@@ -165,8 +165,8 @@ int DECAF_get_page_access(CPUState* env,uint32_t /*target_ulong*/ addr)
     }
 
     if (env->cr[4] & CR4_PAE_MASK) {
-	uint32_t pdpe_addr, pde_addr, pte_addr;
-	uint32_t pdpe;
+	/*uint32_t*/target_ulong pdpe_addr, pde_addr, pte_addr;
+	/*uint32_t*/target_ulong pdpe;
 
 	pdpe_addr = ((env->cr[3] & ~0x1f) + ((addr >> 30) << 3)) &
 	    env->a20_mask;
